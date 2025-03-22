@@ -26,7 +26,11 @@ app.use(errorHandler)
 const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {
+<<<<<<< HEAD
   console.log(`Server running on port ${PORT}`)
+=======
+    console.log(`Server running on port ${PORT}`)
+>>>>>>> 384bacfb270aaaf6d3c3adf21b1c10a98fdd9de7
 })
 
 // In the server.js file, we import the necessary modules and files, configure the middleware, define the routes, and set up error handling. We also connect to the MongoDB database using the connectDB function defined in the db.js file. Finally, we start the server and listen on the specified port.
