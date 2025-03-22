@@ -265,74 +265,10 @@ const ProfilePage = () => {
               </form>
             )}
 
-            {activeTab === "connections" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Your Connections</h2>
-                {userProfile?.connections && userProfile.connections.length > 0 ? (
-                  <div className="space-y-4">
-                    {userProfile.connections.map((connection) => (
-                      <div key={connection._id} className="flex items-center p-4 bg-gray-50 rounded-lg">
-                        <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-4 border border-lime-200">
-                          {connection.profilePicture ? (
-                            <img
-                              src={connection.profilePicture || "/placeholder.svg"}
-                              alt={connection.name}
-                              className="w-full h-full rounded-full object-cover"
-                            />
-                          ) : (
-                            <span className="text-xl text-gray-500">👤</span>
-                          )}
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{connection.name}</h3>
-                          <p className="text-sm text-gray-600">{connection.email}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-8">You don't have any connections yet.</p>
-                )}
-              </div>
-            )}
+          
+            
 
-            {activeTab === "events" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Your Events</h2>
-                {userProfile?.events && userProfile.events.length > 0 ? (
-                  <div className="space-y-4">
-                    {userProfile.events.map((event) => (
-                      <div key={event._id} className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                        <h3 className="font-semibold">{event.title}</h3>
-                        <p className="text-sm text-gray-600">
-                          {new Date(event.date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-8">You haven't registered for any events yet.</p>
-                )}
-              </div>
-            )}
-
-            {activeTab === "groups" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Your Groups</h2>
-                {userProfile?.groups && userProfile.groups.length > 0 ? (
-                  <div className="space-y-4">
-                    {userProfile.groups.map((group) => (
-                      <div key={group._id} className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                        <h3 className="font-semibold">{group.name}</h3>
-                        <p className="text-sm text-gray-600">{group.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-8">You haven't joined any groups yet.</p>
-                )}
-              </div>
-            )}
+            
           </>
         )}
       </div>
