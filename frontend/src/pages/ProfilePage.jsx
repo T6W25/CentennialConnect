@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfile, updateUserProfile, clearError, resetSuccess } from "../slices/authSlice";
 import Loader from "../components/Loader";
-import Message from "../components/Message";
-import '../styles/ProfilePage.css';
 
 const ProfilePage = () => {
     const [name, setName] = useState("");
@@ -12,13 +10,12 @@ const ProfilePage = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
     const [bio, setBio] = useState("");
-    const [message, setMessage] = useState(null);
     const [activeTab, setActiveTab] = useState("profile");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     
     const dispatch = useDispatch();
-    const { userInfo, userProfile, loading, error, success } = useSelector((state) => state.auth);
+    const { userProfile, loading, success } = useSelector((state) => state.auth);
     
     useEffect(() => {
       if (!userProfile) {
@@ -29,7 +26,6 @@ const ProfilePage = () => {
         setProfilePicture(userProfile.profilePicture || "");
         setBio(userProfile.bio || "");
       }
-      //dispatch 
     }, [dispatch, userProfile]);
     
     useEffect(() => {
@@ -82,12 +78,6 @@ const ProfilePage = () => {
           <h1 className="text-xl font-semibold">Your Profile</h1>
         </div>
 
-        {message && <Message variant="success">{message}</Message>}
-        {error && (
-          <Message variant="error" onClose={() => dispatch(clearError())}>
-            {error}
-          </Message>
-        )}
         {loading ? (
           <Loader />
         ) : (
