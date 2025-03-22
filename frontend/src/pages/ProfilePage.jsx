@@ -29,6 +29,7 @@ const ProfilePage = () => {
         setProfilePicture(userProfile.profilePicture || "");
         setBio(userProfile.bio || "");
       }
+      //dispatch 
     }, [dispatch, userProfile]);
     
     useEffect(() => {
