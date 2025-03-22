@@ -67,7 +67,7 @@ const ProfilePage = () => {
     const toggleConfirmPasswordVisibility = () => {
       setShowConfirmPassword(!showConfirmPassword);
     };
-    
+
   return (
     <div className="flex justify-center bg-gray-50 py-4">
       <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 w-full mx-4 my-8" style={{ maxWidth: "600px" }}>
@@ -159,6 +159,7 @@ const ProfilePage = () => {
             </div>
 
             {activeTab === "profile" && (
+                //profile page 
               <form onSubmit={submitHandler}>
                 <div className="mb-5">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
