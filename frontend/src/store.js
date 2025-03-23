@@ -1,28 +1,34 @@
 import { configureStore } from "@reduxjs/toolkit"
 import authReducer from "./slices/authSlice"
 import eventReducer from "./slices/eventSlice"
-import communityReducer from "./slices/communitySlice"
-import postReducer from "./slices/postSlice"
 import searchReducer from "./slices/searchSlice"
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-import { composeWithDevTools } from 'redux-devtools-extension'
 import notificationReducer from "./slices/notificationSlice"
 import {
   notificationListReducer,
   notificationUnreadCountReducer
 } from './reducers/notificationReducers';
+import {
+  eventRegisterReducer,
+  eventCancelRegistrationReducer,
+  eventRegistrationStatusReducer,
+  eventAttendeesReducer
+} from './reducers/eventReducers';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     events: eventReducer,
-    communities: communityReducer,
-    posts: postReducer,
-    search: searchReducer,
+        search: searchReducer,
     notifications: notificationReducer,
+    // Event registration reducers
+    eventRegister: eventRegisterReducer,
+    eventCancelRegistration: eventCancelRegistrationReducer,
+    eventRegistrationStatus: eventRegistrationStatusReducer,
+    eventAttendees: eventAttendeesReducer,
+    // Notification reducers from previous implementation
+    notificationList: notificationListReducer,
+    notificationUnreadCount: notificationUnreadCountReducer
   },
 })
 
 export default store
-
