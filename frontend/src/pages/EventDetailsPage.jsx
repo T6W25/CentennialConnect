@@ -9,6 +9,9 @@ import {
   clearError,
   resetSuccess,
 } from "../slices/eventSlice";
+import { 
+  cancelRegistration 
+} from "../actions/eventActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { formatDate, formatTime } from "../utils/formatDate";
@@ -29,14 +32,14 @@ const EventDetailsPage = () => {
     loading: loadingRegister, 
     success: successRegister, 
     error: errorRegister 
-  } = eventRegister;
+  } = eventRegister || {};
   
   const eventCancelRegistration = useSelector(state => state.eventCancelRegistration);
   const { 
     loading: loadingCancel, 
     success: successCancel, 
     error: errorCancel 
-  } = eventCancelRegistration;
+  } = eventCancelRegistration || {};
   
   const eventRegistrationStatus = useSelector(state => state.eventRegistrationStatus);
   const { 
@@ -44,18 +47,18 @@ const EventDetailsPage = () => {
     registrationStatus, 
     error: errorStatus 
   } = eventRegistrationStatus || {};
-
+  
   useEffect(() => {
     dispatch(getEventById(id));
   }, [dispatch, id]);
-
+  
   useEffect(() => {
     if (success || successRegister || successCancel) {
       dispatch(resetSuccess());
       dispatch(getEventById(id));
     }
   }, [success, successRegister, successCancel, dispatch, id]);
-
+  
   const isRegistered = event?.attendees.some(
     (attendee) => attendee._id === userInfo._id
   );
@@ -78,7 +81,7 @@ const EventDetailsPage = () => {
     dispatch(registerForEvent(id, responses));
     closeRegistrationModal();
   };
-
+  
   const handleCancel = () => {
     if (window.confirm('Are you sure you want to cancel your registration?')) {
       dispatch(cancelRegistration(id));
@@ -99,7 +102,7 @@ const EventDetailsPage = () => {
       setAnnouncementMessage("");
     }
   };
-
+  
   return (
     <div className="event-details-container">
       <div className="event-details-header">
@@ -201,7 +204,6 @@ const EventDetailsPage = () => {
                         )}
                       </>
                     )}
-
                     {isCreator || isEventManager ? (
                       <Link to={`/events/${id}/attendees`} className="event-details-manage-button">
                         Manage Attendees
