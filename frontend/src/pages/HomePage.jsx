@@ -4,11 +4,12 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getFeaturedEvents } from "../slices/eventSlice"
 import { getFeaturedPosts } from "../slices/postSlice"
+import { getNotifications } from "../slices/notificationSlice"
 import Loader from "../components/Loader"
 import Message from "../components/Message"
 import EventCard from "../components/EventCard"
 import PostCard from "../components/PostCard"
-
+import NotificationList from "../components/NotificationList"
 import { Link } from "react-router-dom"
 
 const HomePage = () => {
@@ -17,7 +18,7 @@ const HomePage = () => {
   const { userInfo } = useSelector((state) => state.auth)
   const { featuredEvents, loading: eventsLoading, error: eventsError } = useSelector((state) => state.events)
   const { featuredPosts, loading: postsLoading, error: postsError } = useSelector((state) => state.posts)
- 
+  const { notifications, loading: notificationsLoading } = useSelector((state) => state.notifications)
 
   useEffect(() => {
     if (userInfo) {
@@ -84,7 +85,8 @@ const HomePage = () => {
             <ul className="space-y-2">
               <li>
                 <Link to="/communities" className="text-gray-700 hover:text-green-600 flex items-center">
-                 </Link>
+                  <span className="mr-2">🏢</span> Communities
+                </Link>
               </li>
               <li>
                 <Link to="/events" className="text-gray-700 hover:text-green-600 flex items-center">
@@ -108,8 +110,32 @@ const HomePage = () => {
                   </Link>
                 </li>
               )}
-              
+              {userInfo && userInfo.role === "communityManager" && (
+                <li>
+                  <Link to="/community-manager" className="text-gray-700 hover:text-green-600 flex items-center">
+                    <span className="mr-2">🏢</span> Manage Communities
+                  </Link>
+                </li>
+              )}
+              {userInfo && userInfo.role === "eventManager" && (
+                <li>
+                  <Link to="/event-manager" className="text-gray-700 hover:text-green-600 flex items-center">
+                    <span className="mr-2">📅</span> Manage Events
+                  </Link>
+                </li>
+              )}
             </ul>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <h3 className="text-xl font-bold mb-4 text-green-600">Notifications</h3>
+            {notificationsLoading ? (
+              <Loader />
+            ) : notifications && notifications.length > 0 ? (
+              <NotificationList notifications={notifications} />
+            ) : (
+              <p className="text-gray-500">No new notifications.</p>
+            )}
           </div>
         </div>
       </div>
