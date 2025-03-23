@@ -26,7 +26,14 @@ const search = asyncHandler(async (req, res) => {
     results.events = events
   }
 
-  res.json(results)
+if (!type || type === "posts") {
+  const posts = await Post.find({
+    $or: [{ title: searchQuery }, { content: searchQuery }],
+  }).select("title content author community group createdAt")
+  results.posts = posts
+}
+
+res.json(results)
 })
 
 export { search }
