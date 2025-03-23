@@ -10,4 +10,3 @@ router.route("/profile").get(protect, getUserProfile).put(protect, updateUserPro
 
 export default router
 
-

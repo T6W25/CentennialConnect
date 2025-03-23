@@ -27,25 +27,6 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 })
 
-// Role-based authorization middleware generator
-const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      res.status(401)
-      throw new Error("Not authorized")
-    }
-
-    // Check if the user's role is in the allowed roles
-    if (!roles.includes(req.user.role)) {
-      res.status(403)
-      throw new Error(`Not authorized. Required roles: ${roles.join(", ")}`)
-    }
-
-    next()
-  }
-}
-
-// Specific role middleware (keeping existing ones for backwards compatibility)
 const admin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     next()
@@ -73,37 +54,5 @@ const eventManager = (req, res, next) => {
   }
 }
 
-// Password reset token verification middleware
-const verifyResetToken = asyncHandler(async (req, res, next) => {
-  const { token } = req.params
+export { protect, admin, communityManager, eventManager }
 
-  // Hash the token to compare with stored token
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(token)
-    .digest('hex')
-
-  // Find user with matching token that hasn't expired
-  const user = await User.findOne({
-    resetPasswordToken: hashedToken,
-    resetPasswordExpire: { $gt: Date.now() }
-  })
-
-  if (!user) {
-    res.status(400)
-    throw new Error('Invalid or expired reset token')
-  }
-
-  // Attach user to request object
-  req.user = user
-  next()
-})
-
-export { 
-  protect, 
-  admin, 
-  communityManager, 
-  eventManager,
-  authorize,
-  verifyResetToken
-}
