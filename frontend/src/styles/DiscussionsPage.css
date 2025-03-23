@@ -1,0 +1,289 @@
+/* DiscussionsPage.css */
+
+.discussions-page {
+    background-color: #f9fafb;
+  }
+  
+  .discussions-page h1 {
+    color: #bcd62b;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  
+  .discussions-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .discussions-page-create-button {
+    background-color: #bcd62b;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .discussions-page-create-button:hover {
+    background-color: #15803d;
+  }
+  
+  .discussions-page-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .discussions-page-filter {
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .discussions-page-filter:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .discussions-page-filter.active {
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+  
+  .discussions-page-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .discussions-page-item {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .discussions-page-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .discussions-page-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  
+  .discussions-page-item-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .discussions-page-item-date {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+  
+  .discussions-page-item-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .discussions-page-item-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .discussions-page-item-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    object-fit: cover;
+  }
+  
+  .discussions-page-item-author-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+  }
+  
+  .discussions-page-item-content {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .discussions-page-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .discussions-page-item-stats {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .discussions-page-item-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+  
+  .discussions-page-item-button {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #bcd62b;
+    transition: color 0.2s ease;
+  }
+  
+  .discussions-page-item-button:hover {
+    color: #15803d;
+    text-decoration: underline;
+  }
+  
+  .discussions-page-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 1rem;
+  }
+  
+  .discussions-page-modal {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 28rem;
+  }
+  
+  .discussions-page-modal-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .discussions-page-form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .discussions-page-form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    margin-bottom: 0.25rem;
+  }
+  
+  .discussions-page-form-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+  }
+  
+  .discussions-page-form-input:focus {
+    outline: none;
+    border-color: #bcd62b;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+  }
+  
+  .discussions-page-form-textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    min-height: 150px;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+  
+  .discussions-page-form-textarea:focus {
+    outline: none;
+    border-color: #bcd62b;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+  }
+  
+  .discussions-page-form-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background-color: white;
+    transition: border-color 0.2s ease;
+  }
+  
+  .discussions-page-form-select:focus {
+    outline: none;
+    border-color: #bcd62b;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+  }
+  
+  .discussions-page-button-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+  
+  .discussions-page-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .discussions-page-button-cancel {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    margin-right: 0.5rem;
+  }
+  
+  .discussions-page-button-cancel:hover {
+    background-color: #d1d5db;
+  }
+  
+  .discussions-page-button-primary {
+    background-color: #bcd62b;
+    color: white;
+  }
+  
+  .discussions-page-button-primary:hover {
+    background-color: #15803d;
+  }

@@ -12,43 +12,86 @@ import {
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { formatDate, formatTime } from "../utils/formatDate";
+import Modal from "../components/Modal";
 
 const EventDetailsPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-
   const [announcementMessage, setAnnouncementMessage] = useState("");
-  const [loadingRegister, setLoadingRegister] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [responses, setResponses] = useState({});
+  
   const { event, loading, error, success } = useSelector((state) => state.events);
   const { userInfo } = useSelector((state) => state.auth);
+  
+  const eventRegister = useSelector(state => state.eventRegister);
+  const { 
+    loading: loadingRegister, 
+    success: successRegister, 
+    error: errorRegister 
+  } = eventRegister;
+  
+  const eventCancelRegistration = useSelector(state => state.eventCancelRegistration);
+  const { 
+    loading: loadingCancel, 
+    success: successCancel, 
+    error: errorCancel 
+  } = eventCancelRegistration;
+  
+  const eventRegistrationStatus = useSelector(state => state.eventRegistrationStatus);
+  const { 
+    loading: loadingStatus, 
+    registrationStatus, 
+    error: errorStatus 
+  } = eventRegistrationStatus || {};
 
   useEffect(() => {
     dispatch(getEventById(id));
-  }, [dispatch, id, success]); // ✅ Auto-update attendee list after registering
+  }, [dispatch, id]);
 
   useEffect(() => {
-    if (success) {
+    if (success || successRegister || successCancel) {
       dispatch(resetSuccess());
-      setSuccessMessage("Successfully registered for the event!"); // ✅ Show confirmation message
-      setTimeout(() => setSuccessMessage(""), 3000); // ✅ Hide after 3 sec
+      dispatch(getEventById(id));
     }
-  }, [success, dispatch]);
+  }, [success, successRegister, successCancel, dispatch, id]);
 
   const isRegistered = event?.attendees.some(
     (attendee) => attendee._id === userInfo._id
   );
-
+  
   const isCreator = event?.creator._id === userInfo._id;
-  const isEventManager = userInfo.role === "eventManager" || userInfo.role === "admin";
-
-  const handleRegister = async () => {
-    setLoadingRegister(true);
-    await dispatch(registerForEvent(id));
-    setLoadingRegister(false);
+  const isEventManager =
+    userInfo.role === "eventManager" || userInfo.role === "admin";
+  
+  const isFull = event && event.maxAttendees > 0 && event.attendees.length >= event.maxAttendees;
+  
+  const openRegistrationModal = () => {
+    setShowRegistrationModal(true);
+  };
+  
+  const closeRegistrationModal = () => {
+    setShowRegistrationModal(false);
+  };
+  
+  const handleRegister = () => {
+    dispatch(registerForEvent(id, responses));
+    closeRegistrationModal();
   };
 
+  const handleCancel = () => {
+    if (window.confirm('Are you sure you want to cancel your registration?')) {
+      dispatch(cancelRegistration(id));
+    }
+  };
+  
+  const handleResponseChange = (e, index) => {
+    setResponses({
+      ...responses,
+      [`question_${index}`]: e.target.value
+    });
+  };
+  
   const handleSendAnnouncement = (e) => {
     e.preventDefault();
     if (announcementMessage.trim()) {
@@ -58,13 +101,13 @@ const EventDetailsPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <Link to="/events" className="text-green-600 hover:underline flex items-center">
-          <span className="mr-2">←</span> Back to Events
+    <div className="event-details-container">
+      <div className="event-details-header">
+        <Link to="/events" className="event-details-back-link">
+          <span className="event-details-back-icon">←</span> Back to Events
         </Link>
       </div>
-
+      
       {loading ? (
         <Loader />
       ) : error ? (
@@ -72,126 +115,304 @@ const EventDetailsPage = () => {
           {error}
         </Message>
       ) : event ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="h-64 bg-gray-200">
-                {event.image ? (
-                  <img
-                    src={event.image || "/placeholder.svg"}
-                    alt={event.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-green-100 text-green-600">
-                    <span className="text-6xl">📅</span>
-                  </div>
-                )}
+        <div className="event-details-content">
+          <div className="event-details-main">
+            <div className="event-details-image">
+              {event.image ? (
+                <img
+                  src={event.image || "/placeholder.svg"}
+                  alt={event.title}
+                />
+              ) : (
+                <div className="event-details-image-placeholder">
+                  <span className="event-details-image-placeholder-icon">📅</span>
+                </div>
+              )}
+            </div>
+            <div className="event-details-body">
+              <h1 className="event-details-title">{event.title}</h1>
+              <div className="event-details-meta">
+                <div className="event-details-meta-item">
+                  <span className="event-details-meta-icon">📅</span>
+                  <span>{formatDate(event.date)}</span>
+                </div>
+                <div className="event-details-meta-item">
+                  <span className="event-details-meta-icon">🕒</span>
+                  <span>{formatTime(event.date)}</span>
+                </div>
+                <div className="event-details-meta-item">
+                  <span className="event-details-meta-icon">📍</span>
+                  <span>{event.location}</span>
+                </div>
               </div>
-              <div className="p-6">
-                <h1 className="text-3xl font-bold mb-4 text-gray-800">{event.title}</h1>
-                <div className="flex flex-wrap gap-4 mb-6">
-                  <div className="flex items-center text-gray-600">
-                    <span className="mr-2">📅</span>
-                    <span>{formatDate(event.date)}</span>
-                  </div>
-                  <div className="flex items-center text-gray-600">
-                    <span className="mr-2">🕒</span>
-                    <span>{formatTime(event.date)}</span>
-                  </div>
-                  <div className="flex items-center text-gray-600">
-                    <span className="mr-2">📍</span>
-                    <span>{event.location}</span>
-                  </div>
-                </div>
-                <div className="mb-6">
-                  <span className="bg-green-100 text-green-600 text-sm px-3 py-1 rounded-full">
-                    {event.category}
-                  </span>
-                </div>
-                <div className="text-gray-700 mb-8 whitespace-pre-line">{event.description}</div>
-                
-                {successMessage && <Message variant="success">{successMessage}</Message>}
+              <div className="event-details-category">
+                {event.category}
+              </div>
+              <div className="event-details-description">
+                {event.description}
+              </div>
+              
+              <div className="event-details-actions">
+                {loadingStatus ? (
+                  <Loader />
+                ) : (
+                  <>
+                    {registrationStatus?.registered ? (
+                      <>
+                        <div className="registration-info registration-success">
+                          You're {registrationStatus.status} for this event
+                        </div>
+                        {loadingCancel ? (
+                          <Loader />
+                        ) : (
+                          <button 
+                            className="event-details-cancel-button"
+                            disabled={registrationStatus.status === 'attended'}
+                            onClick={handleCancel}
+                          >
+                            Cancel Registration
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {isFull && !event.allowWaitlist ? (
+                          <button 
+                            className="event-details-register-button"
+                            disabled
+                          >
+                            Event Full
+                          </button>
+                        ) : (
+                          <>
+                            {errorRegister && (
+                              <Message variant="error">
+                                {errorRegister}
+                              </Message>
+                            )}
+                            <button 
+                              className="event-details-register-button"
+                              onClick={openRegistrationModal}
+                              disabled={loadingRegister}
+                            >
+                              {isFull ? 'Join Waitlist' : 'Register for Event'}
+                            </button>
+                          </>
+                        )}
+                      </>
+                    )}
 
-                <div>
-                  {!isRegistered ? (
-                    <button
-                      onClick={handleRegister}
-                      className={`py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        loadingRegister
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-green-600 hover:bg-green-700 text-white"
-                      }`}
-                      disabled={loadingRegister || (event.maxAttendees > 0 && event.attendees.length >= event.maxAttendees)}
-                    >
-                      {loadingRegister ? "Registering..." : event.maxAttendees > 0 &&
-                      event.attendees.length >= event.maxAttendees
-                        ? "Event Full"
-                        : "Register for Event"}
-                    </button>
-                  ) : (
-                    <Message variant="success">You have successfully joined this event!</Message>
-                  )}
-                </div>
+                    {isCreator || isEventManager ? (
+                      <Link to={`/events/${id}/attendees`} className="event-details-manage-button">
+                        Manage Attendees
+                      </Link>
+                    ) : null}
+                  </>
+                )}
               </div>
             </div>
           </div>
-
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold mb-4 text-gray-800">Organizer</h2>
-              <div className="flex items-center">
-                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+          
+          <div className="event-details-sidebar">
+            <div className="event-details-sidebar-section">
+              <h2 className="event-details-sidebar-title">Organizer</h2>
+              <div className="event-details-creator">
+                <div className="event-details-creator-avatar">
                   {event.creator.profilePicture ? (
                     <img
                       src={event.creator.profilePicture || "/placeholder.svg"}
                       alt={event.creator.name}
-                      className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
-                    <span className="text-gray-500">👤</span>
+                    <span className="event-details-creator-avatar-placeholder">👤</span>
                   )}
                 </div>
                 <div>
-                  <div className="font-semibold">{event.creator.name}</div>
-                  <div className="text-sm text-gray-600">{event.creator.role}</div>
+                  <div className="event-details-creator-name">{event.creator.name}</div>
+                  <div className="event-details-creator-role">{event.creator.role}</div>
                 </div>
               </div>
             </div>
-
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold mb-4 text-gray-800">
+            
+            <div className="event-details-sidebar-section">
+              <h2 className="event-details-sidebar-title">
                 Attendees ({event.attendees.length}
                 {event.maxAttendees > 0 ? ` / ${event.maxAttendees}` : ""})
               </h2>
+              
+              {event.maxAttendees > 0 && (
+                <div className="capacity-container">
+                  <div className="capacity-bar">
+                    <div 
+                      className={`capacity-bar-fill ${isFull ? 'capacity-full' : ''}`} 
+                      style={{ width: `${Math.min(100, (event.attendees.length / event.maxAttendees) * 100)}%` }}
+                    ></div>
+                  </div>
+                  <div className="capacity-text">
+                    {event.attendees.length} of {event.maxAttendees} spots filled
+                  </div>
+                </div>
+              )}
+              
               {event.attendees.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
+                <div className="event-details-attendees-list">
                   {event.attendees.slice(0, 10).map((attendee) => (
                     <div
                       key={attendee._id}
-                      className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center"
+                      className="event-details-attendee"
                       title={attendee.name}
                     >
                       {attendee.profilePicture ? (
                         <img
                           src={attendee.profilePicture || "/placeholder.svg"}
                           alt={attendee.name}
-                          className="w-full h-full rounded-full object-cover"
                         />
                       ) : (
-                        <span className="text-gray-500">👤</span>
+                        <span className="event-details-attendee-placeholder">👤</span>
                       )}
+                    </div>
+                  ))}
+                  {event.attendees.length > 10 && (
+                    <div className="event-details-attendee-count">
+                      +{event.attendees.length - 10}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-gray-600">No attendees yet</p>
+              )}
+            </div>
+            
+            <div className="event-details-sidebar-section">
+              <h2 className="event-details-sidebar-title">Announcements</h2>
+              {event.announcements && event.announcements.length > 0 ? (
+                <div className="event-details-announcements-list">
+                  {event.announcements.map((announcement, index) => (
+                    <div key={index} className="event-details-announcement">
+                      <p className="event-details-announcement-message">{announcement.message}</p>
+                      <p className="event-details-announcement-date">
+                        {formatDate(announcement.date)}
+                      </p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-600">No attendees yet</p>
+                <p className="text-gray-600 mb-6">No announcements yet</p>
+              )}
+              
+              {(isCreator || isEventManager) && (
+                <form onSubmit={handleSendAnnouncement} className="event-details-announcement-form">
+                  <textarea
+                    className="event-details-announcement-textarea"
+                    value={announcementMessage}
+                    onChange={(e) => setAnnouncementMessage(e.target.value)}
+                    placeholder="Write an announcement..."
+                    rows="3"
+                    required
+                  ></textarea>
+                  <button
+                    type="submit"
+                    className="event-details-announcement-button"
+                  >
+                    Send Announcement
+                  </button>
+                </form>
               )}
             </div>
           </div>
         </div>
       ) : (
         <Message variant="error">Event not found</Message>
+      )}
+      
+      {/* Registration Modal */}
+      {showRegistrationModal && (
+        <Modal title={`Register for ${event.title}`} onClose={closeRegistrationModal}>
+          <div className="registration-modal-body">
+            {event.registrationQuestions && event.registrationQuestions.length > 0 ? (
+              <div className="questions-container">
+                {event.registrationQuestions.map((question, index) => (
+                  <div key={index} className="registration-question">
+                    <label className="registration-question-label">
+                      {question.questionText}
+                      {question.required && <span className="registration-question-required">*</span>}
+                    </label>
+                    
+                    {question.type === 'text' ? (
+                      <input
+                        type="text"
+                        className="registration-question-input"
+                        required={question.required}
+                        onChange={(e) => handleResponseChange(e, index)}
+                      />
+                    ) : question.type === 'select' ? (
+                      <select
+                        className="registration-question-select"
+                        required={question.required}
+                        onChange={(e) => handleResponseChange(e, index)}
+                      >
+                        <option value="">Select an option</option>
+                        {question.options.map((option, optIdx) => (
+                          <option key={optIdx} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <div className="registration-checkbox-group">
+                        {question.options.map((option, optIdx) => (
+                          <div key={optIdx}>
+                            <input
+                              type="checkbox"
+                              id={`question_${index}_option_${optIdx}`}
+                              className="registration-checkbox"
+                              onChange={(e) => {
+                                const currentVal = responses[`question_${index}`] || '';
+                                const values = currentVal ? currentVal.split(',') : [];
+                                
+                                if (e.target.checked) {
+                                  values.push(option);
+                                } else {
+                                  const idx = values.indexOf(option);
+                                  if (idx !== -1) values.splice(idx, 1);
+                                }
+                                
+                                handleResponseChange({
+                                  target: { value: values.join(',') }
+                                }, index);
+                              }}
+                            />
+                            <label htmlFor={`question_${index}_option_${optIdx}`}>
+                              {option}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>
+                You're about to register for {event.title}. Click "Register" to confirm.
+                {isFull && event.allowWaitlist && (
+                  <span className="registration-waitlist-notice">
+                    This event is full. You'll be added to the waitlist.
+                  </span>
+                )}
+              </p>
+            )}
+            
+            <div className="event-details-actions">
+              <button className="event-details-cancel-button" onClick={closeRegistrationModal}>
+                Cancel
+              </button>
+              <button className="event-details-register-button" onClick={handleRegister}>
+                {isFull && event.allowWaitlist ? 'Join Waitlist' : 'Register'}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );
