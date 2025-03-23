@@ -1,0 +1,167 @@
+/* ---- Discussions Page ---- */
+.discussions-page {
+  background-color: #dcfce7; 
+  padding: 2rem 1rem;
+}
+
+.discussions-page h1 {
+  color: #064e3b; 
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ---- Create Post Form ---- */
+.discussions-create-form {
+  background-color: #16a34a; 
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.discussions-create-form input,
+.discussions-create-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #15803d;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: #dcfce7; /* Soft green input background */
+  color: #064e3b;
+}
+
+.discussions-create-form input:focus,
+.discussions-create-form textarea:focus {
+  border-color: #064e3b;
+  box-shadow: 0 0 5px rgba(6, 78, 59, 0.3);
+  outline: none;
+}
+
+/* ---- Code Snippet Styling ---- */
+.discussions-page-item-code {
+  background-color: #f3f4f6; /* Lighter code background */
+  color: #1e1e1e; /* Dark text for readability */
+  font-family: 'Courier New', monospace;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  border-left: 4px solid #064e3b; /* Darker green accent */
+}
+
+/* ---- Upvote & Downvote Buttons ---- */
+.discussions-page-item-votes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.discussions-page-item-vote-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #16a34a; /* Green icons */
+  transition: color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.discussions-page-item-vote-button:hover {
+  color: #064e3b; /* Darker green on hover */
+  transform: scale(1.1);
+}
+
+.discussions-page-item-vote-count {
+  font-weight: bold;
+  color: #1f2937;
+}
+
+/* ---- Comments Section ---- */
+.discussions-page-comments {
+  margin-top: 1.5rem;
+  border-top: 1px solid #16a34a; /* Green divider */
+  padding-top: 1rem;
+}
+
+.discussions-page-comment {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: #dcfce7; /* Soft green comment box */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.75rem;
+}
+
+.discussions-page-comment-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #16a34a;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.discussions-page-comment-content {
+  background-color: white; /* White bubble */
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #064e3b;
+}
+
+/* ---- Comment Input & Button ---- */
+.discussions-page-comment-textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #15803d;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: #dcfce7;
+}
+
+.discussions-page-comment-button {
+  background-color: #064e3b;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+}
+
+.discussions-page-comment-button:hover {
+  background-color: #022c22;
+  transform: scale(1.05);
+}
+
+/* ---- Mobile Optimizations ---- */
+@media (max-width: 768px) {
+  .discussions-page {
+    padding: 1rem;
+  }
+
+  .discussions-create-form {
+    padding: 1rem;
+  }
+
+  .discussions-page-item-code {
+    font-size: 0.8rem;
+    padding: 0.75rem;
+  }
+
+  .discussions-page-comment {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .discussions-page-comment-content {
+    max-width: 100%;
+  }
+}
