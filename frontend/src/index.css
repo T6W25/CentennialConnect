@@ -7,11 +7,14 @@
 
 /* CSS Variables */
 :root {
+  --primary-color: #508819; /* Replace with your current dark green variable */
+  --primary-hover: #8dd118; /* A slightly lighter version for hover states */
+  /* Update any other color variations as needed */
   --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
-  --color-green-500: #22c55e;
-  --color-green-600: #16a34a;
-  --color-green-700: #15803d;
+  --color-green-500: #2bd639;
+  --primary-hover: #8dd118;
+  --color-green-700: #edead6;
   
   --color-gray-50: #f9fafb;
   --color-gray-100: #f3f4f6;
@@ -43,7 +46,7 @@ body {
 
 a {
   text-decoration: none;
-  color: var(--color-green-600);
+  color: var(--primary-hover);
 }
 
 a:hover {
@@ -212,7 +215,7 @@ button {
 .text-white { color: white; }
 .text-black { color: var(--color-black); }
 .text-green-500 { color: var(--color-green-500); }
-.text-green-600 { color: var(--color-green-600); }
+.text-green-600 { color: var(--primary-hover); }
 .text-gray-500 { color: var(--color-gray-500); }
 .text-gray-600 { color: var(--color-gray-600); }
 .text-gray-700 { color: var(--color-gray-700); }
@@ -222,7 +225,7 @@ button {
 .bg-green-50 { background-color: var(--color-green-50); }
 .bg-green-100 { background-color: var(--color-green-100); }
 .bg-green-500 { background-color: var(--color-green-500); }
-.bg-green-600 { background-color: var(--color-green-600); }
+.bg-green-600 { background-color: var(--primary-hover); }
 .bg-green-700 { background-color: var(--color-green-700); }
 .bg-gray-50 { background-color: var(--color-gray-50); }
 .bg-gray-100 { background-color: var(--color-gray-100); }
@@ -244,7 +247,7 @@ button {
 .border-gray-200 { border-color: var(--color-gray-200); }
 .border-gray-300 { border-color: var(--color-gray-300); }
 .border-green-500 { border-color: var(--color-green-500); }
-.border-green-600 { border-color: var(--color-green-600); }
+.border-green-600 { border-color: var(--primary-hover); }
 
 /* Shadows */
 .shadow-sm { box-shadow: var(--shadow-sm); }

@@ -1,12 +1,11 @@
 import '../styles/EventCard.css';
-
 import { Link } from "react-router-dom"
 import { formatDate } from "../utils/formatDate"
 
 const EventCard = ({ event }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="h-40 bg-gray-200">
+      <div className="h-40 bg-gray-200~">
         {event.image ? (
           <img src={event.image || "/placeholder.svg"} alt={event.title} className="w-full h-full object-cover" />
         ) : (
