@@ -26,7 +26,7 @@
   }
   
   .events-create-button {
-    background-color: var(--primary-hover);
+    background-color: var(--color-green-600);
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -91,7 +91,7 @@
   }
   
   .events-empty-button {
-    background-color: var(--primary-hover);
+    background-color: var(--color-green-600);
     color: white;
     padding: 0.5rem 1rem;
     border: none;

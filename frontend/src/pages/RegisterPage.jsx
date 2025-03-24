@@ -1,22 +1,23 @@
 "use client"
+import '../styles/RegisterPage.css';
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { register} from "../slices/authSlice"
+import { register, clearError } from "../slices/authSlice"
 import Loader from "../components/Loader"
-
+import Message from "../components/Message"
 
 const RegisterPage = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [setMessage] = useState(null)
+  const [message, setMessage] = useState(null)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { loading, userInfo } = useSelector((state) => state.auth)
+  const { loading, error, userInfo } = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (userInfo) {
@@ -39,7 +40,16 @@ const RegisterPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-3xl font-bold mb-6 text-center text-green-600">Sign Up</h1>
-        
+        {message && (
+          <Message variant="error" onClose={() => setMessage(null)}>
+            {message}
+          </Message>
+        )}
+        {error && (
+          <Message variant="error" onClose={() => dispatch(clearError())}>
+            {error}
+          </Message>
+        )}
         {loading && <Loader />}
         <form onSubmit={submitHandler}>
           <div className="mb-4">

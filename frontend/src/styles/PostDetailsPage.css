@@ -1,0 +1,210 @@
+/* PostDetailsPage.css */
+
+.post-details {
+    background-color: #f9fafb;
+  }
+  
+  .post-details-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .post-details-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .post-details-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+  
+  .post-details-date {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .post-details-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .post-details-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    background-color: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .post-details-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    object-fit: cover;
+  }
+  
+  .post-details-author-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .post-details-author-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .post-details-author-meta {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+  
+  .post-details-content {
+    font-size: 1rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  
+  .post-details-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .post-details-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .post-details-upvote {
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+  
+  .post-details-upvote:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .post-details-upvote.active {
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+  
+  .post-details-comments-header {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .post-details-comment-form {
+    margin-bottom: 2rem;
+  }
+  
+  .post-details-comment-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    min-height: 100px;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+    margin-bottom: 1rem;
+  }
+  
+  .post-details-comment-textarea:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+  }
+  
+  .post-details-comment-button {
+    background-color: #16a34a;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .post-details-comment-button:hover {
+    background-color: #15803d;
+  }
+  
+  .post-details-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .post-details-comment {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .post-details-comment:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .post-details-comment-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .post-details-comment-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .post-details-comment-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    object-fit: cover;
+  }
+  
+  .post-details-comment-author {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .post-details-comment-time {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-left: auto;
+  }
+  
+  .post-details-comment-content {
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.5;
+  }

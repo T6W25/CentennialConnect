@@ -1,0 +1,33 @@
+.notification-list {
+    max-height: 24rem;
+    overflow-y: auto;
+  }
+  
+  .notification-item {
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .notification-item.unread {
+    background-color: var(--color-green-50);
+  }
+  
+  .notification-item.read {
+    background-color: var(--color-gray-50);
+  }
+  
+  .notification-link {
+    display: block;
+  }
+  
+  .notification-message {
+    font-size: 0.875rem;
+    color: var(--color-gray-800);
+    margin-bottom: 0.25rem;
+  }
+  
+  .notification-time {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+  }

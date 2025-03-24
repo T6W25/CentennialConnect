@@ -1,7 +1,8 @@
-const Event = require('../models/Event');
-const User = require('../models/User');
+import asyncHandler from "express-async-handler"
+import Event from "../models/eventModel.js"
+import User from "../models/userModel.js"
 
-// @desc    Create a event
+// @desc    Create a new event
 // @route   POST /api/events
 // @access  Private/EventManager
 const createEvent = asyncHandler(async (req, res) => {
@@ -26,7 +27,6 @@ const createEvent = asyncHandler(async (req, res) => {
   }
 })
 
-
 // @desc    Get all events
 // @route   GET /api/events
 // @access  Private
@@ -44,6 +44,81 @@ const getFeaturedEvents = asyncHandler(async (req, res) => {
     .sort({ date: 1 })
     .limit(5)
   res.json(events)
+})
+
+// @desc    Get event by ID
+// @route   GET /api/events/:id
+// @access  Private
+const getEventById = asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.id)
+    .populate("creator", "name email profilePicture")
+    .populate("attendees", "name email profilePicture")
+
+  if (event) {
+    res.json(event)
+  } else {
+    res.status(404)
+    throw new Error("Event not found")
+  }
+})
+
+// @desc    Update event
+// @route   PUT /api/events/:id
+// @access  Private/EventManager
+const updateEvent = asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.id)
+
+  if (event) {
+    // Check if user is the creator of the event or an admin
+    if (
+      event.creator.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin" &&
+      req.user.role !== "eventManager"
+    ) {
+      res.status(401)
+      throw new Error("Not authorized to update this event")
+    }
+
+    event.title = req.body.title || event.title
+    event.description = req.body.description || event.description
+    event.date = req.body.date || event.date
+    event.location = req.body.location || event.location
+    event.category = req.body.category || event.category
+    event.maxAttendees = req.body.maxAttendees || event.maxAttendees
+    event.image = req.body.image || event.image
+    event.isFeatured = req.body.isFeatured !== undefined ? req.body.isFeatured : event.isFeatured
+
+    const updatedEvent = await event.save()
+    res.json(updatedEvent)
+  } else {
+    res.status(404)
+    throw new Error("Event not found")
+  }
+})
+
+// @desc    Delete event
+// @route   DELETE /api/events/:id
+// @access  Private/EventManager
+const deleteEvent = asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.id)
+
+  if (event) {
+    // Check if user is the creator of the event or an admin
+    if (
+      event.creator.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin" &&
+      req.user.role !== "eventManager"
+    ) {
+      res.status(401)
+      throw new Error("Not authorized to delete this event")
+    }
+
+    await event.remove()
+    res.json({ message: "Event removed" })
+  } else {
+    res.status(404)
+    throw new Error("Event not found")
+  }
 })
 
 // @desc    Register for an event
@@ -106,12 +181,55 @@ const unregisterFromEvent = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Send event announcement
+// @route   POST /api/events/:id/announcements
+// @access  Private/EventManager
+const sendEventAnnouncement = asyncHandler(async (req, res) => {
+  const { message } = req.body
+  const event = await Event.findById(req.params.id)
 
+  if (event) {
+    // Check if user is the creator of the event or an admin or event manager
+    if (
+      event.creator.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin" &&
+      req.user.role !== "eventManager"
+    ) {
+      res.status(401)
+      throw new Error("Not authorized to send announcements for this event")
+    }
 
-module.exports = {
+    event.announcements.push({ message })
+    await event.save()
+
+    // Notify all attendees
+    for (const attendeeId of event.attendees) {
+      const attendee = await User.findById(attendeeId)
+      if (attendee) {
+        attendee.notifications.push({
+          message: `New announcement for ${event.title}: ${message}`,
+          link: `/events/${event._id}`,
+        })
+        await attendee.save()
+      }
+    }
+
+    res.status(201).json({ message: "Announcement sent successfully" })
+  } else {
+    res.status(404)
+    throw new Error("Event not found")
+  }
+})
+
+export {
   createEvent,
   getEvents,
   getFeaturedEvents,
+  getEventById,
+  updateEvent,
+  deleteEvent,
   registerForEvent,
-  unregisterFromEvent  
-};
+  unregisterFromEvent,
+  sendEventAnnouncement,
+}
+

@@ -1,4 +1,5 @@
 "use client"
+import '../styles/Header.css';
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -26,7 +27,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           <Link to="/" className="text-2xl font-bold">
-            Connect
+            CentNet
           </Link>
 
           <div className="hidden md:flex items-center space-x-6">

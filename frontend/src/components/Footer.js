@@ -1,3 +1,4 @@
+import '../styles/Footer.css';
 const Footer = () => {
     return (
       <footer className="bg-green-600 text-white py-6">

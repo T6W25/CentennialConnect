@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getNotifications, markNotificationAsRead, clearError } from "../slices/notificationSlice";
 import Loader from "../components/Loader";
+import Message from "../components/Message";
 import { formatDistanceToNow } from "../utils/formatDate";
+import '../styles/NotificationsPage.css';
 
 const NotificationsPage = () => {
   const dispatch = useDispatch();

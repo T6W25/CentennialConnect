@@ -1,10 +1,11 @@
 "use client"
+import '../styles/LoginPage.css';
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { login} from "../slices/authSlice"
+import { login, clearError } from "../slices/authSlice"
 import Loader from "../components/Loader"
-
+import Message from "../components/Message"
 
 const LoginPage = () => {
   const [email, setEmail] = useState("")
@@ -13,7 +14,7 @@ const LoginPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { loading,userInfo } = useSelector((state) => state.auth)
+  const { loading, error, userInfo } = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (userInfo) {
@@ -30,6 +31,11 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-3xl font-bold mb-6 text-center text-green-600">Sign In</h1>
+        {error && (
+          <Message variant="error" onClose={() => dispatch(clearError())}>
+            {error}
+          </Message>
+        )}
         {loading && <Loader />}
         <form onSubmit={submitHandler}>
           <div className="mb-4">
