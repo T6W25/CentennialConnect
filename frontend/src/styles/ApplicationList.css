@@ -1,0 +1,19 @@
+.application-list {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.application-card {
+  background: #f9f9f9;
+  border: 1px solid #474044;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 250px;
+}
+
+.application-card h3 {
+  color: #474044;
+}
