@@ -1,4 +1,3 @@
-// models/jobModel.js
 import mongoose from 'mongoose';
 
 const jobSchema = new mongoose.Schema(
@@ -58,7 +57,12 @@ const jobSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    skills: [String],
+    skills: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     applications: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -71,7 +75,6 @@ const jobSchema = new mongoose.Schema(
   }
 );
 
-// Create text indexes for search functionality
 jobSchema.index(
   {
     title: 'text',
@@ -88,6 +91,7 @@ jobSchema.index(
       location: 2,
       description: 1,
     },
+    name: 'JobTextIndex',
   }
 );
 
