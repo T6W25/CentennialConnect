@@ -11,7 +11,8 @@ import postRoutes from "./routes/postRoutes.js"
 import searchRoutes from "./routes/searchRoutes.js"
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js"
 import jobRoutes from './routes/jobRoutes.js';
-import applicationRoutes from "./routes/applicationRoutes.js";
+//import applicationRoutes from "./routes/applicationRoutes.js";
+import applicationRoutes from "./routes/jobApplicationRoutes.js";
 
 
 
