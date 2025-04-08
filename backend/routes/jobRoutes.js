@@ -1,36 +1,24 @@
-import express from 'express';
+import express from "express"
 import {
   createJob,
   getJobs,
   getJobById,
-  updateJob,
+  updateJobStatus,
   deleteJob,
-  searchJobs,
-  getMyJobs,
-} from '../controllers/jobController.js';
-
-import {
   applyForJob,
-  getJobApplications,
-} from '../controllers/jobApplicationController.js';
+  updateApplicationStatus,
+} from "../controllers/jobController.js"
+import { protect } from "../middleware/authMiddleware.js"
 
-import { protect, restrictTo } from '../middleware/authMiddleware.js';
+const router = express.Router()
 
-const router = express.Router();
+router.route("/").post(protect, createJob).get(protect, getJobs)
 
-// publics
-router.get('/', getJobs);
-router.get('/search', searchJobs);
-router.get('/:id', getJobById);
+router.route("/:id").get(protect, getJobById).delete(protect, deleteJob)
 
-// authenticated user
-router.post('/', protect, restrictTo('non-academic'), createJob);
-router.get('/myjobs', protect, getMyJobs);
-router.put('/:id', protect, updateJob);
-router.delete('/:id', protect, deleteJob);
+router.route("/:id/status").put(protect, updateJobStatus)
+router.route("/:id/apply").post(protect, applyForJob)
+router.route("/:id/applications/:applicationId").put(protect, updateApplicationStatus)
 
-// job application
-router.post('/:id/apply', protect, applyForJob);
-router.get('/:id/applications', protect, getJobApplications);
+export default router
 
-export default router;

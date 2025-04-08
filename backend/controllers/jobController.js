@@ -1,190 +1,221 @@
-import Job from '../models/jobModel.js';
-import JobApplication from '../models/jobApplicationModel.js';
-import asyncHandler from 'express-async-handler';
-import { isValidObjectId } from 'mongoose';
+import asyncHandler from "express-async-handler"
+import Job from "../models/jobModel.js"
+import User from "../models/userModel.js"
 
+// @desc    Create a new job
+// @route   POST /api/jobs
+// @access  Private
 const createJob = asyncHandler(async (req, res) => {
-  const {
-    title,
-    company,
-    location,
-    description,
-    requirements,
-    type,
-    salary,
-    contactEmail,
-    deadline,
-    isRemote,
-    skills,
-  } = req.body;
+  const { title, company, location, type, category, description, requirements, benefits, salary } = req.body
 
   const job = await Job.create({
     title,
     company,
     location,
-    description,
-    requirements,
     type,
-    salary: salary || 'Not specified',
-    contactEmail,
-    postedBy: req.user._id,
-    deadline,
-    isRemote: isRemote || false,
-    skills: skills || [],
-  });
+    category,
+    description,
+    requirements: requirements || "",
+    benefits: benefits || "",
+    salary: salary || "",
+    employer: req.user._id,
+  })
 
-  if (job) {
-    res.status(201).json(job);
-  } else {
-    res.status(400);
-    throw new Error('Invalid job data');
-  }
-});
+  res.status(201).json(job)
+})
 
+// @desc    Get all jobs
+// @route   GET /api/jobs
+// @access  Private
 const getJobs = asyncHandler(async (req, res) => {
-  const pageSize = 10;
-  const page = Number(req.query.page) || 1;
-  const filters = { status: 'Open' };
+  const { category, type, status } = req.query
 
-  if (req.query.type) filters.type = req.query.type;
-  if (req.query.isRemote === 'true') filters.isRemote = true;
-  if (req.query.location) {
-    filters.location = { $regex: req.query.location, $options: 'i' };
-  }
+  const filter = {}
 
-  const count = await Job.countDocuments(filters);
+  if (category) filter.category = category
+  if (type) filter.type = type
+  if (status) filter.status = status
 
-  const jobs = await Job.find(filters)
-    .populate('postedBy', 'name')
-    .sort({ createdAt: -1 })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
+  const jobs = await Job.find(filter).populate("employer", "name email profilePicture").sort({ createdAt: -1 })
 
-  res.json({
-    jobs,
-    page,
-    pages: Math.ceil(count / pageSize),
-    totalJobs: count,
-  });
-});
+  res.json(jobs)
+})
 
+// @desc    Get job by ID
+// @route   GET /api/jobs/:id
+// @access  Private
 const getJobById = asyncHandler(async (req, res) => {
-  if (!isValidObjectId(req.params.id)) {
-    res.status(400);
-    throw new Error('Invalid job ID');
-  }
-
-  const job = await Job.findById(req.params.id).populate('postedBy', 'name email');
+  const job = await Job.findById(req.params.id)
+    .populate("employer", "name email profilePicture")
+    .populate("applications.applicant", "name email profilePicture")
 
   if (job) {
-    res.json(job);
+    res.json(job)
   } else {
-    res.status(404);
-    throw new Error('Job not found');
+    res.status(404)
+    throw new Error("Job not found")
   }
-});
+})
 
-const updateJob = asyncHandler(async (req, res) => {
-  if (!isValidObjectId(req.params.id)) {
-    res.status(400);
-    throw new Error('Invalid job ID');
-  }
+// @desc    Update job status
+// @route   PUT /api/jobs/:id/status
+// @access  Private
+const updateJobStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body
 
-  const job = await Job.findById(req.params.id);
-
-  if (!job) {
-    res.status(404);
-    throw new Error('Job not found');
+  if (!["open", "closed", "filled"].includes(status)) {
+    res.status(400)
+    throw new Error("Invalid status")
   }
 
-  if (job.postedBy.toString() !== req.user._id.toString()) {
-    res.status(403);
-    throw new Error('Not authorized to update this job');
+  const job = await Job.findById(req.params.id)
+
+  if (job) {
+    // Check if user is the employer
+    if (job.employer.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      res.status(401)
+      throw new Error("Not authorized to update this job")
+    }
+
+    job.status = status
+    const updatedJob = await job.save()
+
+    res.json(updatedJob)
+  } else {
+    res.status(404)
+    throw new Error("Job not found")
   }
+})
 
-  const updatedJob = await Job.findByIdAndUpdate(
-    req.params.id,
-    { ...req.body },
-    { new: true, runValidators: true }
-  );
-
-  res.json(updatedJob);
-});
-
+// @desc    Delete job
+// @route   DELETE /api/jobs/:id
+// @access  Private
 const deleteJob = asyncHandler(async (req, res) => {
-  if (!isValidObjectId(req.params.id)) {
-    res.status(400);
-    throw new Error('Invalid job ID');
+  const job = await Job.findById(req.params.id)
+
+  if (job) {
+    // Check if user is the employer
+    if (job.employer.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      res.status(401)
+      throw new Error("Not authorized to delete this job")
+    }
+
+    await job.remove()
+    res.json({ message: "Job removed" })
+  } else {
+    res.status(404)
+    throw new Error("Job not found")
+  }
+})
+
+// @desc    Apply for a job
+// @route   POST /api/jobs/:id/apply
+// @access  Private
+const applyForJob = asyncHandler(async (req, res) => {
+  const { coverLetter, resume } = req.body
+  const job = await Job.findById(req.params.id)
+
+  if (job) {
+    // Check if job is open
+    if (job.status !== "open") {
+      res.status(400)
+      throw new Error("This job is no longer accepting applications")
+    }
+
+    // Check if user has already applied
+    if (job.applications.some((app) => app.applicant.toString() === req.user._id.toString())) {
+      res.status(400)
+      throw new Error("You have already applied for this job")
+    }
+
+    job.applications.push({
+      applicant: req.user._id,
+      resume,
+      coverLetter,
+    })
+
+    const updatedJob = await job.save()
+
+    // Notify the employer
+    const employer = await User.findById(job.employer)
+    if (employer) {
+      employer.notifications.push({
+        message: `New application for ${job.title} from ${req.user.name}`,
+        link: `/jobs/${job._id}`,
+      })
+      await employer.save()
+    }
+
+    res.json(updatedJob)
+  } else {
+    res.status(404)
+    throw new Error("Job not found")
+  }
+})
+
+// @desc    Update application status
+// @route   PUT /api/jobs/:id/applications/:applicationId
+// @access  Private
+const updateApplicationStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body
+
+  if (!["pending", "accepted", "rejected"].includes(status)) {
+    res.status(400)
+    throw new Error("Invalid status")
   }
 
-  const job = await Job.findById(req.params.id);
+  const job = await Job.findById(req.params.id)
 
-  if (!job) {
-    res.status(404);
-    throw new Error('Job not found');
+  if (job) {
+    // Check if user is the employer
+    if (job.employer.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      res.status(401)
+      throw new Error("Not authorized to update this application")
+    }
+
+    const application = job.applications.id(req.params.applicationId)
+
+    if (!application) {
+      res.status(404)
+      throw new Error("Application not found")
+    }
+
+    application.status = status
+
+    // If accepting, you might want to update other applications or job status
+    if (status === "accepted") {
+      // Optionally mark job as filled
+      // job.status = "filled";
+
+      // Notify the applicant
+      const applicant = await User.findById(application.applicant)
+      if (applicant) {
+        applicant.notifications.push({
+          message: `Your application for ${job.title} has been accepted!`,
+          link: `/jobs/${job._id}`,
+        })
+        await applicant.save()
+      }
+    } else if (status === "rejected") {
+      // Notify the applicant
+      const applicant = await User.findById(application.applicant)
+      if (applicant) {
+        applicant.notifications.push({
+          message: `Your application for ${job.title} has been rejected.`,
+          link: `/jobs/${job._id}`,
+        })
+        await applicant.save()
+      }
+    }
+
+    const updatedJob = await job.save()
+
+    res.json(updatedJob)
+  } else {
+    res.status(404)
+    throw new Error("Job not found")
   }
+})
 
-  if (job.postedBy.toString() !== req.user._id.toString()) {
-    res.status(403);
-    throw new Error('Not authorized to delete this job');
-  }
+export { createJob, getJobs, getJobById, updateJobStatus, deleteJob, applyForJob, updateApplicationStatus }
 
-  await JobApplication.deleteMany({ job: req.params.id });
-  await job.remove();
-
-  res.json({ message: 'Job removed' });
-});
-
-const searchJobs = asyncHandler(async (req, res) => {
-  const { query, location, type, remote } = req.query;
-  const pageSize = 10;
-  const page = Number(req.query.page) || 1;
-
-  const filter = { status: 'Open' };
-
-  if (query) {
-    filter.$text = { $search: query };
-  }
-
-  if (location) {
-    filter.location = { $regex: location, $options: 'i' };
-  }
-
-  if (type) {
-    filter.type = type;
-  }
-
-  if (remote === 'true') {
-    filter.isRemote = true;
-  }
-
-  const count = await Job.countDocuments(filter);
-
-  const jobs = await Job.find(filter)
-    .sort(query ? { score: { $meta: 'textScore' } } : { createdAt: -1 })
-    .populate('postedBy', 'name')
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-
-  res.json({
-    jobs,
-    page,
-    pages: Math.ceil(count / pageSize),
-    totalJobs: count,
-  });
-});
-
-const getMyJobs = asyncHandler(async (req, res) => {
-  const jobs = await Job.find({ postedBy: req.user._id }).sort({ createdAt: -1 });
-  res.json(jobs);
-});
-
-export {
-  createJob,
-  getJobs,
-  getJobById,
-  updateJob,
-  deleteJob,
-  searchJobs,
-  getMyJobs,
-};
