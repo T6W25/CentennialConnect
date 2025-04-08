@@ -19,6 +19,10 @@ const postSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Community",
     },
+    image: {
+      type: String,
+      default: "",
+    },
     group: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Group",
