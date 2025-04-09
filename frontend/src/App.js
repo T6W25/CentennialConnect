@@ -18,6 +18,7 @@ import SearchPage from "./pages/SearchPage"
 import NotificationsPage from "./pages/NotificationsPage"
 import AdminDashboardPage from "./pages/AdminDashboardPage"
 import CommunityManagerPage from "./pages/CommunityManagerPage"
+import PostModerationPage from "./pages/PostModerationPage"
 import EventManagerPage from "./pages/EventManagerPage"
 import PrivateRoute from "./components/PrivateRoute"
 import AdminRoute from "./components/AdminRoute"
@@ -83,6 +84,14 @@ const App = () => {
                 }
               />
               <Route
+                path="/communities/:id/moderate"
+                element={
+                  <CommunityManagerRoute>
+                    <PostModerationPage />
+                  </CommunityManagerRoute>
+                }
+              />
+              <Route
                 path="/groups/:id"
                 element={
                   <PrivateRoute>
@@ -139,6 +148,14 @@ const App = () => {
                 }
               />
               <Route
+                path="/post-moderation"
+                element={
+                  <CommunityManagerRoute>
+                    <PostModerationPage />
+                  </CommunityManagerRoute>
+                }
+              />
+              <Route
                 path="/event-manager"
                 element={
                   <EventManagerRoute>
@@ -156,4 +173,3 @@ const App = () => {
 }
 
 export default App
-

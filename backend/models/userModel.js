@@ -1,6 +1,26 @@
 import mongoose from "mongoose"
 import bcrypt from "bcryptjs"
 
+const notificationSchema = mongoose.Schema(
+  {
+    message: {
+      type: String,
+      required: true,
+    },
+    link: {
+      type: String,
+      default: "",
+    },
+    read: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  },
+)
+
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -12,7 +32,7 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
       validate: {
-        validator: (v) => /^.+@my\.centennialcollege\.ca$/.test(v),
+        validator: (v) => v.endsWith("@my.centennialcollege.ca"),
         message: (props) => `${props.value} is not a valid Centennial College email!`,
       },
     },
@@ -22,7 +42,7 @@ const userSchema = mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin", "communityManager", "eventManager"],
+      enum: ["user", "communityManager", "eventManager", "admin"],
       default: "user",
     },
     profilePicture: {
@@ -33,10 +53,20 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "",
     },
+    resume: {
+      type: String,
+      default: "",
+    },
     connections: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+      },
+    ],
+    communities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Community",
       },
     ],
     groups: [
@@ -51,27 +81,21 @@ const userSchema = mongoose.Schema(
         ref: "Event",
       },
     ],
-    notifications: [
-      {
-        message: String,
-        date: {
-          type: Date,
-          default: Date.now,
-        },
-        read: {
-          type: Boolean,
-          default: false,
-        },
-        link: String,
-      },
-    ],
+    notifications: [notificationSchema],
     preferences: {
-      eventCategories: [String],
-      emailNotifications: {
-        type: Boolean,
-        default: true,
+      type: Object,
+      default: {
+        emailNotifications: true,
+        darkMode: false,
       },
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    // Add fields for password reset functionality
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   {
     timestamps: true,
@@ -83,7 +107,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password)
 }
 
-// Encrypt password using bcrypt
+// Encrypt password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next()
@@ -96,4 +120,3 @@ userSchema.pre("save", async function (next) {
 const User = mongoose.model("User", userSchema)
 
 export default User
-

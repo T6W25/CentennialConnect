@@ -10,6 +10,11 @@ import eventRoutes from "./routes/eventRoutes.js"
 import postRoutes from "./routes/postRoutes.js"
 import searchRoutes from "./routes/searchRoutes.js"
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js"
+import jobRoutes from './routes/jobRoutes.js';
+//import applicationRoutes from "./routes/applicationRoutes.js";
+import applicationRoutes from "./routes/jobApplicationRoutes.js";
+
+
 
 dotenv.config()
 
@@ -30,6 +35,8 @@ app.use("/api/groups", groupRoutes)
 app.use("/api/events", eventRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/search", searchRoutes)
+app.use('/api/jobs', jobRoutes);
+app.use("/api/applications", applicationRoutes);
 
 // Error Middleware
 app.use(notFound)

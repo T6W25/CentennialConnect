@@ -1,0 +1,26 @@
+.application-container {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #474044;
+  background: #ffffff;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.application-container input {
+  width: 90%;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #474044;
+  border-radius: 5px;
+}
+
+.apply-btn {
+  background: #bcd62b;
+  color: #474044;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

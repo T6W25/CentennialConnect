@@ -4,6 +4,7 @@ import Community from "../models/communityModel.js"
 import Group from "../models/groupModel.js"
 import Event from "../models/eventModel.js"
 import Post from "../models/postModel.js"
+import Job from "../models/jobModel.js"
 
 // @desc    Search users, communities, groups, events, and posts
 // @route   GET /api/search
@@ -47,6 +48,15 @@ const search = asyncHandler(async (req, res) => {
       $or: [{ title: searchQuery }, { content: searchQuery }],
     }).select("title content author community group createdAt")
     results.posts = posts
+  }
+
+  // Search jobs
+  if (!type || type === "jobs") {
+    const jobs = await Job.find({
+      $or: [{ title: searchRegex }, { company: searchRegex }, { location: searchRegex }, { description: searchRegex }],
+    }).populate("employer", "name email profilePicture")
+
+    results.jobs = jobs
   }
 
   res.json(results)
