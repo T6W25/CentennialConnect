@@ -21,6 +21,8 @@ import flaggedPostRoutes from './routes/flaggedPostRoutes.js';
 import reportRoutes from "./routes/reportRoutes.js";
 import systemSettingsRoutes from "./routes/systemSettingsRoutes.js";
 import engagementRoutes from './routes/engagementRoutes.js';
+import trackingRoutes from './routes/trackingRoutes.js';
+import rsvpRoutes from './routes/rsvpRoutes.js';
 
 dotenv.config();
 
@@ -49,6 +51,8 @@ app.use('/api/flagged-posts', flaggedPostRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/system-settings", systemSettingsRoutes);
 app.use('/api/engagements', engagementRoutes);
+app.use('/api/tracking', trackingRoutes);
+app.use('/api/rsvp', rsvpRoutes);
 
 // Static route to serve uploaded resume files
 const __filename = fileURLToPath(import.meta.url);
