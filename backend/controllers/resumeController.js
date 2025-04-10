@@ -6,7 +6,7 @@ import fs from 'fs';
 
 const uploadResume = asyncHandler(async (req, res) => {
   if (!req.file) {
-    res.status(400);
+    res.status(400).json({ message: 'No file uploaded' });
     throw new Error('No file uploaded');
   }
 
