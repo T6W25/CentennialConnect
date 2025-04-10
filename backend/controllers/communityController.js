@@ -7,7 +7,14 @@ import Post from "../models/postModel.js"
 // @route   POST /api/communities
 // @access  Private/CommunityManager
 const createCommunity = asyncHandler(async (req, res) => {
-  const { name, description, image } = req.body
+  const { name, description, image } = req.body;
+
+  // Check if the community already exists
+  const existingCommunity = await Community.findOne({ name });
+  if (existingCommunity) {
+    res.status(400);
+    throw new Error("Community with this name already exists");
+  }
 
   const community = await Community.create({
     name,
@@ -16,15 +23,16 @@ const createCommunity = asyncHandler(async (req, res) => {
     managers: [req.user._id],
     members: [req.user._id],
     image,
-  })
+  });
 
   if (community) {
-    res.status(201).json(community)
+    res.status(201).json(community);
   } else {
-    res.status(400)
-    throw new Error("Invalid community data")
+    res.status(400);
+    throw new Error("Invalid community data");
   }
-})
+});
+
 
 // @desc    Get all communities
 // @route   GET /api/communities
