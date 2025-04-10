@@ -23,6 +23,7 @@ import systemSettingsRoutes from "./routes/systemSettingsRoutes.js";
 import engagementRoutes from './routes/engagementRoutes.js';
 import trackingRoutes from './routes/trackingRoutes.js';
 import rsvpRoutes from './routes/rsvpRoutes.js';
+import announcementRoutes from './routes/announcementRoutes.js';
 
 dotenv.config();
 
@@ -53,6 +54,8 @@ app.use("/api/system-settings", systemSettingsRoutes);
 app.use('/api/engagements', engagementRoutes);
 app.use('/api/tracking', trackingRoutes);
 app.use('/api/rsvp', rsvpRoutes);
+app.use('/api/announcements', announcementRoutes);
+
 
 // Static route to serve uploaded resume files
 const __filename = fileURLToPath(import.meta.url);
