@@ -24,6 +24,8 @@ import engagementRoutes from './routes/engagementRoutes.js';
 import trackingRoutes from './routes/trackingRoutes.js';
 import rsvpRoutes from './routes/rsvpRoutes.js';
 import announcementRoutes from './routes/announcementRoutes.js';
+import reportedContentRoutes from './routes/reportedContentRoutes.js';
+
 
 dotenv.config();
 
@@ -55,6 +57,7 @@ app.use('/api/engagements', engagementRoutes);
 app.use('/api/tracking', trackingRoutes);
 app.use('/api/rsvp', rsvpRoutes);
 app.use('/api/announcements', announcementRoutes);
+app.use('/api/reported-content', reportedContentRoutes);
 
 
 // Static route to serve uploaded resume files
