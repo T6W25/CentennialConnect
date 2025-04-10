@@ -17,6 +17,7 @@ import applicationRoutes from "./routes/jobApplicationRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import violationRoutes from './routes/violationRoutes.js';
+import flaggedPostRoutes from './routes/flaggedPostRoutes.js';
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/resumes", resumeRoutes);
 app.use('/api/violations', violationRoutes);
+app.use('/api/flagged-posts', flaggedPostRoutes);
 
 // Static route to serve uploaded resume files
 const __filename = fileURLToPath(import.meta.url);
