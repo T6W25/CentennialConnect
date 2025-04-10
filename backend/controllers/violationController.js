@@ -24,7 +24,7 @@ const resolveViolation = asyncHandler(async (req, res) => {
   const violation = await Violation.findById(req.params.id);
 
   if (!violation) {
-    res.status(404);
+    res.status(404).json({ message: 'Violation not found' });
     throw new Error('Violation not found');
   }
 
