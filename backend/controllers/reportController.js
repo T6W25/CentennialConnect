@@ -19,7 +19,7 @@ const createReport = asyncHandler(async (req, res) => {
   if (reportType === 'user') {
     const user = await User.findById(reportedId);
     if (!user) {
-      res.status(404);
+      res.status(404).json({ message: 'User not found' }); 
       throw new Error('User not found');
     }
 
@@ -33,7 +33,7 @@ const createReport = asyncHandler(async (req, res) => {
   } else if (reportType === 'post') {
     const post = await Post.findById(reportedId);
     if (!post) {
-      res.status(404);
+      res.status(404).json({ message: 'Post not found' });
       throw new Error('Post not found');
     }
 
@@ -52,13 +52,13 @@ const createReport = asyncHandler(async (req, res) => {
 
     const post = await Post.findById(postId);
     if (!post) {
-      res.status(404);
+      res.status(404).json({ message: 'Post not found' }); 
       throw new Error('Post not found');
     }
 
     const comment = post.comments.id(commentId);
     if (!comment) {
-      res.status(404);
+      res.status(404).json({ message: 'Comment not found' });
       throw new Error('Comment not found');
     }
 
@@ -70,7 +70,7 @@ const createReport = asyncHandler(async (req, res) => {
     });
 
   } else {
-    res.status(400);
+    res.status(400).json({ message: 'Invalid report type' }); 
     throw new Error('Invalid report type');
   }
 
