@@ -18,6 +18,8 @@ import resumeRoutes from "./routes/resumeRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import violationRoutes from './routes/violationRoutes.js';
 import flaggedPostRoutes from './routes/flaggedPostRoutes.js';
+import reportRoutes from "./routes/reportRoutes.js";
+import systemSettingsRoutes from "./routes/systemSettingsRoutes.js";
 
 dotenv.config();
 
@@ -43,6 +45,9 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/resumes", resumeRoutes);
 app.use('/api/violations', violationRoutes);
 app.use('/api/flagged-posts', flaggedPostRoutes);
+app.use("/api/reports", reportRoutes);
+app.use("/api/system-settings", systemSettingsRoutes);
+
 
 // Static route to serve uploaded resume files
 const __filename = fileURLToPath(import.meta.url);

@@ -14,6 +14,8 @@ const createReport = asyncHandler(async (req, res) => {
     throw new Error('Missing required fields');
   }
 
+  let report;
+
   if (reportType === 'user') {
     const user = await User.findById(reportedId);
     if (!user) {
@@ -21,14 +23,13 @@ const createReport = asyncHandler(async (req, res) => {
       throw new Error('User not found');
     }
 
-    const report = await Report.create({
+    report = await Report.create({
       reporter: req.user._id,
       reportType,
       reportedUser: reportedId,
       reason,
     });
 
-    res.status(201).json(report);
   } else if (reportType === 'post') {
     const post = await Post.findById(reportedId);
     if (!post) {
@@ -36,15 +37,19 @@ const createReport = asyncHandler(async (req, res) => {
       throw new Error('Post not found');
     }
 
-    const report = await Report.create({
+    report = await Report.create({
       reporter: req.user._id,
       reportType,
       reportedPost: reportedId,
       reason,
     });
 
-    res.status(201).json(report);
   } else if (reportType === 'comment') {
+    if (!postId || !commentId) {
+      res.status(400);
+      throw new Error('Missing postId or commentId for comment report');
+    }
+
     const post = await Post.findById(postId);
     if (!post) {
       res.status(404);
@@ -57,21 +62,19 @@ const createReport = asyncHandler(async (req, res) => {
       throw new Error('Comment not found');
     }
 
-    const report = await Report.create({
+    report = await Report.create({
       reporter: req.user._id,
       reportType,
-      reportedComment: {
-        post: postId,
-        commentId,
-      },
+      reportedComment: { post: postId, commentId },
       reason,
     });
 
-    res.status(201).json(report);
   } else {
     res.status(400);
     throw new Error('Invalid report type');
   }
+
+  res.status(201).json(report);
 });
 
 // @desc    Get all reports
@@ -91,7 +94,7 @@ const getReports = asyncHandler(async (req, res) => {
   res.json(reports);
 });
 
-// @desc    Update report status (pending, resolved, dismissed)
+// @desc    Update report status
 // @route   PUT /api/reports/:id/status
 // @access  Private/Admin
 const updateReportStatus = asyncHandler(async (req, res) => {
