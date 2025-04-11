@@ -1,0 +1,22 @@
+.actions-container {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #474044;
+  background: #ffffff;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.actions-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.actions-container li {
+  background: #f9f9f9;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #474044;
+}

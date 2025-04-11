@@ -1,0 +1,27 @@
+.suspension-container {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #474044;
+  background: #f9f9f9;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.suspension-container input,
+.suspension-container textarea {
+  width: 90%;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #474044;
+  border-radius: 5px;
+}
+
+.suspend-btn {
+  background: #bcd62b;
+  color: #474044;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
