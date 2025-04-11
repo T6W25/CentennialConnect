@@ -20,6 +20,10 @@ import AdminDashboardPage from "./pages/AdminDashboardPage"
 import CommunityManagerPage from "./pages/CommunityManagerPage"
 import PostModerationPage from "./pages/PostModerationPage"
 import EventManagerPage from "./pages/EventManagerPage"
+import ReportManagementPage from "./pages/ReportManagementPage"
+import EventAnnouncementsPage from "./pages/EventAnnouncementsPage"
+import AdminAnalyticsPage from "./pages/AdminAnalyticsPage"
+import AdminSettingsPage from "./pages/AdminSettingsPage"
 import PrivateRoute from "./components/PrivateRoute"
 import AdminRoute from "./components/AdminRoute"
 import CommunityManagerRoute from "./components/CommunityManagerRoute"
@@ -92,6 +96,14 @@ const App = () => {
                 }
               />
               <Route
+                path="/communities/:id/reports"
+                element={
+                  <CommunityManagerRoute>
+                    <ReportManagementPage />
+                  </CommunityManagerRoute>
+                }
+              />
+              <Route
                 path="/groups/:id"
                 element={
                   <PrivateRoute>
@@ -140,6 +152,22 @@ const App = () => {
                 }
               />
               <Route
+                path="/admin/analytics"
+                element={
+                  <AdminRoute>
+                    <AdminAnalyticsPage />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/settings"
+                element={
+                  <AdminRoute>
+                    <AdminSettingsPage />
+                  </AdminRoute>
+                }
+              />
+              <Route
                 path="/community-manager"
                 element={
                   <CommunityManagerRoute>
@@ -156,10 +184,26 @@ const App = () => {
                 }
               />
               <Route
+                path="/reports"
+                element={
+                  <CommunityManagerRoute>
+                    <ReportManagementPage />
+                  </CommunityManagerRoute>
+                }
+              />
+              <Route
                 path="/event-manager"
                 element={
                   <EventManagerRoute>
                     <EventManagerPage />
+                  </EventManagerRoute>
+                }
+              />
+              <Route
+                path="/event-announcements"
+                element={
+                  <EventManagerRoute>
+                    <EventAnnouncementsPage />
                   </EventManagerRoute>
                 }
               />
