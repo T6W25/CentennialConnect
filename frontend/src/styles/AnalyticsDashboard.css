@@ -1,0 +1,32 @@
+.dashboard {
+  text-align: center;
+  padding: 20px;
+  background: #ffffff;
+  color: #474044;
+}
+
+.metrics-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background: #474044;
+  color: white;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  background: #bcd62b;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  width: 150px;
+}
+
+.chart-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  margin: auto;
+}

@@ -1,0 +1,47 @@
+.rsvp-container {
+  text-align: center;
+  padding: 20px;
+  background: #ffffff;
+  color: #474044;
+}
+
+.rsvp-form {
+  margin-bottom: 20px;
+}
+
+.rsvp-form input {
+  padding: 10px;
+  border: 1px solid #bcd62b;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.rsvp-form button {
+  padding: 10px 15px;
+  background: #bcd62b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.attendee-list {
+  background: #474044;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 50%;
+  margin: auto;
+}
+
+.attendee-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.attendee-list li {
+  background: #bcd62b;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
